@@ -13,7 +13,7 @@ module.exports = function () {
   });
   client.connect(port);
   client.subscribe('badjs');
-  socket.on('mesage', function (data) {
+  client.on('mesage', function (data) {
     stream.write(data);
   });
   return stream;
