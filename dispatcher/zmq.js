@@ -1,7 +1,8 @@
 var map = require('map-stream')
   , zmq = require('zmq')
   , client = zmq.socket('sub')
-  , port = 'tcp://127.0.0.1:10000';
+  , port = 'tcp://127.0.0.1:10000'
+  , service = 'badjs';
 
 /**
  * dispatcher
@@ -9,11 +10,11 @@ var map = require('map-stream')
  */
 module.exports = function () {
   var stream = map(function (data, fn) {
-    fn(null, JSON.stringify(data));
+    fn(null, data);
   });
   client.connect(port);
-  client.subscribe('badjs');
-  socket.on('mesage', function (data) {
+  client.subscribe(service);
+  client.on('message', function (data) {
     stream.write(data);
   });
   return stream;
