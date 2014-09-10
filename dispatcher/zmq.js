@@ -13,8 +13,13 @@ module.exports = function () {
     fn(null, data);
   });
   client.connect(port);
+<<<<<<< HEAD
   client.subscribe(service);
   client.on('message', function (data) {
+=======
+  client.subscribe('badjs');
+  client.on('mesage', function (data) {
+>>>>>>> FETCH_HEAD
     stream.write(data);
   });
   return stream;
