@@ -1,7 +1,7 @@
 'use strict';
 
-var dispatcher = require('./dispatcher/zmq')
-  , save = require('./lib/save');
+var dispatcher = require('./acceptor/zmq')
+  , save = require('./storage/fileStorage');
 
 // use zmq to dispatch
 dispatcher()
