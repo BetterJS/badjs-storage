@@ -29,7 +29,8 @@ module.exports = function (){
    return map(function (data) {
        console.log('get a msg');
        try{
-        data = JSON.parse(data.toString().replace('badjs' , ''));
+        var dataStr = data.toString();
+        data = JSON.parse(dataStr.substring(dataStr.indexOf(' ')));
        }catch (e){
            console.log('parse error');
            return ;
@@ -47,6 +48,7 @@ module.exports = function (){
        }
        var id = data.id;
        delete data.id;
+       delete data._key;
        data.date = new Date;
 
        //{from , ip , msg , userAgent ,  ,date }
