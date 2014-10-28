@@ -13,7 +13,7 @@ var insertDocuments = function(db , model) {
     ] );
 }
 
-var url = 'mongodb://localhost:27017/badjs';
+var url = global.MONGDO_URL;
 var mongoDB;
 // Use connect method to connect to the Server
 MongoClient.connect(url, function(err, db) {
@@ -27,7 +27,6 @@ MongoClient.connect(url, function(err, db) {
 
 module.exports = function (){
    return map(function (data) {
-       console.log('get a msg');
        try{
         var dataStr = data.toString();
         data = JSON.parse(dataStr.substring(dataStr.indexOf(' ')));
@@ -42,7 +41,6 @@ module.exports = function (){
        }
 
        if(!mongoDB ){
-
            console.log('cannot connect mongodb');
            return ;
        }
