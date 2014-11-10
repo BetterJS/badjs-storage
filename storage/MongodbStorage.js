@@ -49,7 +49,7 @@ module.exports = function (){
        delete data._key;
        data.date = new Date;
 
-       //{from , ip , msg , userAgent ,  ,date }
+       //{from , ip , msg , userAgent , uin  ,date , target , rowNum , colNum }
        insertDocuments(mongoDB , {id : id,
            model : data
        });
