@@ -22,66 +22,115 @@ MongoClient.connect(url, function(err, db) {
 
 
 var validate = function (req , rep){
-    var json = requ.query;
+    var json = req.query;
 
-    if(id <= 0){
-        res.writeHead(403, {
-            'Content-Type': 'text/html'
-        });
-        res.statusCode = 403;
-        res.write(JSON.stringify({msg : 'id is required'}));
-        return false;
+    if(json.id <= 0){
+        return {ok : false , msg : 'id is required'};
     }
 
-    if(json.startDate || json.endDate){
-        res.writeHead(403, {
-            'Content-Type': 'text/html'
-        });
-        res.statusCode = 403;
-        res.write(JSON.stringify({msg : 'startDate or endDate is required'}));
-        return false;
+    if(!json.startDate || !json.endDate){
+        return {ok : false , msg : 'startDate or endDate is required'};
     }
 
 
     try{
-        var startDate = new Date(json.startDate);
-        var endDate = new Date(json.endDate);
+        var startDate = new Date(json.startDate - 0);
+        var endDate = new Date(json.endDate - 0) ;
         json.startDate = startDate;
         json.endDate = endDate;
     }catch(e){
-        res.writeHead(403, {
-            'Content-Type': 'text/html'
-        });
-        res.statusCode = 403;
-        res.write(JSON.stringify({msg : 'startDate or endDate parse error'}));
-        return false;
+        return {ok : false , msg : 'startDate or endDate parse error'};
     }
-    return true;
+
+    try{
+        if(json.include){
+            json.include = JSON.parse(json.include)
+        }else {
+            json.include = [];
+        }
+
+        if(json.exclude ){
+            json.exclude  = JSON.parse(json.exclude )
+        }else {
+            json.exclude = [];
+        }
+    }catch(e){
+        return {ok : false , msg : 'include or exclude parse error'};
+    }
+
+    return {ok : true};
 }
 
 
 module.exports = function (){
     connect()
-        .use('/badjs', connect.query())
+        .use('/query', connect.query())
         .use('/query', function (req, res) {
 
-            if(!validate(req , res)){
+            var result = validate(req , res);
+
+            if(!result.ok){
+                res.writeHead(403, {
+                    'Content-Type': 'text/html'
+                });
+                res.statusCode = 403;
+                res.write(JSON.stringify(result));
                 return ;
             }
 
 
-            var json = requ.query;
-            var id = json , startDate = json.startDate , endDate = json.endDate;
+            var json = req.query;
+            var id = json.id , startDate = json.startDate , endDate = json.endDate;
             delete json.id;
             delete json.startDate;
             delete json.endDate;
 
+            var queryJSON = {all : {}};
 
 
-            json.date = {$lt : endDate , $gt : startDate};
+            var includeJSON = [];
+            json.include.forEach(function (value , key){
+                includeJSON.push( new RegExp( value ));
+            });
 
-            db.collection('badjslog_' + id).find(json);
+            if(includeJSON.length > 0){
+                queryJSON.all.$all = includeJSON;
+            }
 
-        });
+            var excludeJSON = [];
+            json.exclude.forEach(function (value , key){
+                excludeJSON.push(new RegExp( value ));
+            });
+
+            if(excludeJSON.length > 0){
+                queryJSON.all.$not = {$in : excludeJSON};
+            }
+
+            if(includeJSON.length <= 0 && excludeJSON.length <=0){
+                delete queryJSON.all;
+
+            }
+
+
+
+            queryJSON.date = {$lt : endDate , $gt : startDate };
+
+            mongoDB.collection('badjslog_' + id).find(queryJSON , function (error,cursor){
+                cursor.each(function(error,doc){
+                        console.log(JSON.stringify(doc));
+                });
+
+                res.writeHead(200, {
+                    'Content-Type': 'text/html'
+                });
+                res.statusCode = 200;
+                res.end();
+
+            });
+
+
+        }).listen(9000);
+
+    console.log('query server start ... ')
 }
 

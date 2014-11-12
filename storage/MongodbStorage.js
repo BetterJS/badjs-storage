@@ -46,7 +46,12 @@ module.exports = function (){
        }
        var id = data.id;
        delete data.id;
-       delete data._key;
+
+       var all = '';
+       for(var key in data ) {
+            all += ';'+key+'=' + data[key];
+       }
+       data.all = all;
        data.date = new Date;
 
        //{from , ip , msg , userAgent , uin  ,date , target , rowNum , colNum }

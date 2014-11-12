@@ -10,4 +10,8 @@ dispatcher()
   .pipe(save());
 
 
-console.log('badjs-storage start ...')
+console.log('badjs-storage start ...');
+
+setTimeout(function (){
+    require('./queryService/query')();
+},1000);
