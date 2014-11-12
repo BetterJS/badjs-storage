@@ -81,12 +81,9 @@ module.exports = function (){
 
             var json = req.query;
             var id = json.id , startDate = json.startDate , endDate = json.endDate;
-            delete json.id;
-            delete json.startDate;
-            delete json.endDate;
 
-            var queryJSON = {all : {}};
 
+            var queryJSON  = {all : {}};
 
             var includeJSON = [];
             json.include.forEach(function (value , key){
@@ -108,7 +105,6 @@ module.exports = function (){
 
             if(includeJSON.length <= 0 && excludeJSON.length <=0){
                 delete queryJSON.all;
-
             }
 
 
@@ -116,14 +112,19 @@ module.exports = function (){
             queryJSON.date = {$lt : endDate , $gt : startDate };
 
             mongoDB.collection('badjslog_' + id).find(queryJSON , function (error,cursor){
+                var data = [];
                 cursor.each(function(error,doc){
-                        console.log(JSON.stringify(doc));
+                    if(doc){
+                        delete doc.all;
+                        data.push(doc)
+                    }
                 });
 
                 res.writeHead(200, {
-                    'Content-Type': 'text/html'
+                    'Content-Type': 'text/json'
                 });
                 res.statusCode = 200;
+                res.write(JSON.stringify(data));
                 res.end();
 
             });
