@@ -109,23 +109,32 @@ module.exports = function (){
 
 
 
-            queryJSON.date = {$lt : endDate , $gt : startDate };
+           queryJSON.date = {$lt : endDate , $gt : startDate  };
+
+
+           queryJSON.level = json.level || 0;
+
+            var limit = 500;
 
             mongoDB.collection('badjslog_' + id).find(queryJSON , function (error,cursor){
-                var data = [];
-                cursor.each(function(error,doc){
-                    if(doc){
-                        delete doc.all;
-                        data.push(doc)
-                    }
+                res.writeHead(200, {
+                        'Content-Type': 'text/json'
                 });
 
-                res.writeHead(200, {
-                    'Content-Type': 'text/json'
+                res.write('[');
+                var first = true;
+                cursor.sort({'date' : -1}).skip((json.pageSize || 0) * limit).limit(limit).each(function(error,item){
+                    if(item){
+                        delete item.all;
+                        res.write( (first ? '' : ',' ) + JSON.stringify(item));
+                    }else {
+                        res.write(']');
+                        res.end();
+                        return ;
+                    }
+                    first = false;
+
                 });
-                res.statusCode = 200;
-                res.write(JSON.stringify(data));
-                res.end();
 
             });
 
@@ -134,4 +143,6 @@ module.exports = function (){
 
     console.log('query server start ... ')
 }
+
+
 
