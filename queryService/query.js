@@ -123,7 +123,7 @@ module.exports = function (){
 
                 res.write('[');
                 var first = true;
-                cursor.sort({'date' : -1}).skip((json.pageSize || 0) * limit).limit(limit).each(function(error,item){
+                cursor.sort({'date' : -1}).skip((json.index  || 0) * limit).limit(limit).each(function(error,item){
                     if(item){
                         delete item.all;
                         res.write( (first ? '' : ',' ) + JSON.stringify(item));
