@@ -54,7 +54,7 @@ module.exports = function (){
        data.all = all;
        data.date = new Date;
 
-       //{from , ip , msg , userAgent , uin  ,date , target , rowNum , colNum }
+       //{from , ip , msg , userAgent , uin  ,date , url , rowNum , colNum }
        insertDocuments(mongoDB , {id : id,
            model : data
        });

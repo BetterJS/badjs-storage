@@ -116,12 +116,18 @@ module.exports = function (){
            }
 
             json.level.forEach(function ( value , key){
-                json.level[key] = "" + value;
+                json.level[key] =  value - 0;
             })
 
            queryJSON.level = {$all : json.level } ;
 
             var limit = 500;
+
+            if(json.index - 0){
+                json.index = (json.index - 0);
+            }else {
+                json.index = 0
+            }
 
             mongoDB.collection('badjslog_' + id).find(queryJSON , function (error,cursor){
                 res.writeHead(200, {
@@ -130,9 +136,10 @@ module.exports = function (){
 
                 res.write('[');
                 var first = true;
-                cursor.sort({'date' : -1}).skip((json.index  || 0) * limit).limit(limit).each(function(error,item){
+                cursor.sort({'date' : -1}).skip(json.index * limit).limit(limit).each(function(error,item){
                     if(item){
                         delete item.all;
+                        item.date = item.date -0;
                         res.write( (first ? '' : ',' ) + JSON.stringify(item));
                     }else {
                         res.write(']');
