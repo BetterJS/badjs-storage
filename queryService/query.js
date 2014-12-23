@@ -58,6 +58,17 @@ var validate = function (req , rep){
         return {ok : false , msg : 'include or exclude parse error'};
     }
 
+
+    try{
+        if(json.level){
+            json.level = JSON.parse(json.level)
+        }else {
+            json.level = [];
+        }
+    }catch(e){
+        return {ok : false , msg : 'level parse error'};
+    }
+
     return {ok : true};
 }
 
@@ -107,17 +118,13 @@ module.exports = function (){
                 delete queryJSON.all;
             }
 
-
-
-           queryJSON.date = {$lt : endDate , $gt : startDate  };
-
-           if(!json.level || json.level.length <=0 ){
-               json.level = [0];
-           }
-
             json.level.forEach(function ( value , key){
                 json.level[key] =  value - 0;
             })
+
+
+            queryJSON.date = {$lt : endDate , $gt : startDate  };
+
 
            queryJSON.level = {$all : json.level } ;
 
