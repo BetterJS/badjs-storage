@@ -1,6 +1,6 @@
 'use strict';
 
-global.MONGDO_URL = "mongodb://localhost:27017/badjs";
+global.MONGDO_URL = "mongodb://betterjs:betterjs4imweb@localhost:27017/badjs";
 var dispatcher = require('./acceptor/zmq')
   , save = require('./storage/MongodbStorage');
 
