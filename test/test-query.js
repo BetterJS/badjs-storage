@@ -2,6 +2,7 @@
  * Created by chriscai on 2015/1/14.
  */
 
+var MongoClient = require('mongodb').MongoClient;
 
 var mongoUrl = "mongodb://betterjs:betterjs4imweb@localhost:27017/badjs";
 
