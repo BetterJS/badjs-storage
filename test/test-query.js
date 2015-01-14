@@ -26,10 +26,10 @@ MongoClient.connect(mongoUrl, function(err, db) {
 
 
     mongoDB.collection('badjslog_' + 991).find(queryJSON , function (error,cursor){
-        cursor.sort({'date' : -1}).skip(json.index * limit).limit(limit).forEach(function(error,item){
+        cursor.sort({'date' : -1}).skip(0).limit(500).forEach(function(error,item){
            if(error){
                console.log("error : " + error);
-           }else if(){
+           }else {
                console.log(JSON.stringify(item));
            }
         });
