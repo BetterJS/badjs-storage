@@ -164,7 +164,7 @@ module.exports = function (){
 
                 res.write('[');
                 var first = true;
-                cursor.sort({'date' : -1}).skip(json.index * limit).limit(limit).forEach(function(error,item){
+                cursor.sort({'date' : -1}).skip(json.index * limit).limit(limit).forEach(function(item){
                     if(item){
                         delete item.all;
                         item.date = item.date -0;

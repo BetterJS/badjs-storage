@@ -11,6 +11,7 @@ var mongoDB;
 MongoClient.connect(mongoUrl, function(err, db) {
     if(err){
         console.log("failed connect to server");
+        return ;
     }else {
         console.log("Connected correctly to server");
     }
@@ -20,16 +21,15 @@ MongoClient.connect(mongoUrl, function(err, db) {
 
     var queryJSON = {};
 
-    queryJSON.date = {$lt : new Date(1418199180000) , $gt : new Date (1418112780000) };
+    queryJSON.date = {$lt : new Date(1418794477352) , $gt : new Date (1418708077352) };
 
-    queryJSON.level = {$all : 4 } ;
+    queryJSON.level = {$all : [4] } ;
 
 
     mongoDB.collection('badjslog_' + 991).find(queryJSON , function (error,cursor){
-        cursor.sort({'date' : -1}).skip(0).limit(500).forEach(function(error,item){
-           if(error){
-               console.log("error : " + error);
-           }else {
+        console.log(error)
+        cursor.sort({'date' : -1}).skip(0).limit(500).forEach(function(item){
+          if(item){
                console.log(JSON.stringify(item));
            }
         });
