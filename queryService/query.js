@@ -82,7 +82,11 @@ var validate = function (req , rep){
 
     try{
         if(json.level){
-            json.level = JSON.parse(json.level)
+            if(toString.apply(json.level) == "[object Array]"){
+            }else {
+                json.level = JSON.parse(json.level);
+            }
+
         }else {
             json.level = [];
         }
@@ -144,7 +148,7 @@ module.exports = function (){
             })
 
 
-            queryJSON.date = {$lt : endDate , $gt : startDate  };
+           queryJSON.date = {$lt : endDate , $gt : startDate  };
 
 
            queryJSON.level = {$all : json.level } ;
@@ -162,21 +166,20 @@ module.exports = function (){
                         'Content-Type': 'text/json'
                 });
 
-                res.write('[');
-                var first = true;
-                cursor.sort({'date' : -1}).skip(json.index * limit).limit(limit).forEach(function(item){
-                    if(item){
-                        delete item.all;
-                        item.date = item.date -0;
-                        res.write( (first ? '' : ',' ) + JSON.stringify(item));
-                    }else {
-                        res.write(']');
+                cursor.sort({'date' : -1}).skip(json.index * limit).limit(limit).toArray(function(err , item){
+                        res.write(   JSON.stringify(item));
                         res.end();
-                        return ;
-                    }
-                    first = false;
 
                 });
+//
+//                setTimeout(function (){
+//                    if(hadData){
+//                        return ;
+//                    }
+//                    res.write(']');
+//                    res.end();
+//                },3000)
+
 
             });
 
