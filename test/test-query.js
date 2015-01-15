@@ -30,7 +30,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
         console.log(error)
         cursor.sort({'date' : -1}).skip(0).limit(500).forEach(function(item){
           if(item){
-               console.log(JSON.stringify(item));
+               console.log(JSON.stringify(item));cd
            }
         });
 
