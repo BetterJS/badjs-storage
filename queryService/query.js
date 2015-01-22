@@ -151,7 +151,7 @@ module.exports = function (){
            queryJSON.date = {$lt : endDate , $gt : startDate  };
 
 
-           queryJSON.level = {$all : json.level } ;
+           queryJSON.level = {$in : json.level } ;
 
             var limit = 500;
 
