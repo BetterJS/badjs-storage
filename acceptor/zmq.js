@@ -1,8 +1,8 @@
 var map = require('map-stream')
   , zmq = require('zmq')
   , client = zmq.socket('sub')
-  , port = 'tcp://127.0.0.1:10000'
-  , service = 'badjs';
+  , port = GLOBAL.pjconfig.zmq.url
+  , service = GLOBAL.pjconfig.zmq.subscribe;
 
 /**
  * dispatcher

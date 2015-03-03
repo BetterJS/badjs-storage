@@ -1,6 +1,10 @@
 {
     "mongodb" : {
         "url" : "mongodb://betterjs:betterjs4imweb@localhost:27017/badjs"
+    },
+    "zmq" : {
+        "url" : "tcp://127.0.0.1:10000",
+        "subscribe" : "badjs"
     }
     
 }
