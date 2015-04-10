@@ -8,7 +8,7 @@ global.MONGDO_URL = "mongodb://localhost:27017/badjs";
 
 
 
- require('../queryService/autoClear');
+ require('./autoClear');
 
 
 

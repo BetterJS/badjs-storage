@@ -22,5 +22,6 @@ dispatcher()
 console.log('badjs-storage start ...');
 
 setTimeout(function (){
-    require('./queryService/query')();
+    require('./service/query')();
+    require('./service/autoClear')();
 },1000);
