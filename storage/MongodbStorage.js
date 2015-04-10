@@ -6,11 +6,26 @@ var MongoClient = require('mongodb').MongoClient,
     map = require('map-stream');
 
 
+var hadCreatedCollection = {};
+
 var insertDocuments = function(db , model) {
-    var collection = db.collection('badjslog_' + model.id);
+    var collectionName = 'badjslog_' + model.id;
+    var collection = db.collection(collectionName);
     collection.insert([
         model.model
-    ] );
+    ] , function (err , result){
+        if (hadCreatedCollection[collectionName]) {
+            return ;
+        }
+        collection.indexExists('date_-1' , function (err , result ){
+            if(!result){
+                collection.createIndex( {date : -1 } , function (err , result){
+
+                });
+            }
+            hadCreatedCollection[collectionName] = true;
+        })
+    });
 }
 
 var url = global.MONGDO_URL;
@@ -54,9 +69,10 @@ module.exports = function (){
        data.all = all;
        data.date = new Date;
 
-       //{from , ip , msg , userAgent , uin  ,date , url , rowNum , colNum }
-       insertDocuments(mongoDB , {id : id,
-           model : data
-       });
+
+           insertDocuments(mongoDB , {id : id,
+               model : data
+           });
+
     });
 }
