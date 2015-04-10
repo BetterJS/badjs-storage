@@ -42,18 +42,22 @@ var autoClearStart = function (){
 }
 
 
-setTimeout(function (){
+module.exports = function (){
+    setTimeout(function (){
 
 
-    autoClearStart();
-
-
-    // 一周清理一次
-    setInterval(function (){
         autoClearStart();
-    }, 1000 * 60 * 60 * 24 *7)
 
-},5000);
+
+        // 一周清理一次
+        setInterval(function (){
+            autoClearStart();
+        }, 1000 * 60 * 60 * 24 *7)
+
+    },5000);
+}
+
+
 
 
 
