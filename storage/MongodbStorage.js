@@ -67,7 +67,7 @@ module.exports = function (){
             all += ';'+key+'=' + data[key];
        }
        data.all = all;
-       data.date = new Date;
+       data.date = new Date(data.date);
 
 
            insertDocuments(mongoDB , {id : id,
