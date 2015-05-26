@@ -3,7 +3,7 @@
 
 
 var argv = process.argv.slice(2);
-if(argv.indexOf('--debug') >= 0){
+if(argv.indexOf('--project') >= 0){
     GLOBAL.pjconfig =  require('./project.debug.json');
 }else {
     GLOBAL.pjconfig = require('./project.json');

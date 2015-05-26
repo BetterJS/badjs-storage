@@ -40,6 +40,7 @@ MongoClient.connect(url, function(err, db) {
     mongoDB = db;
 });
 
+
 module.exports = function (){
    return map(function (data) {
        try{
