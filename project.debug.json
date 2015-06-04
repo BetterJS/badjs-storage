@@ -2,9 +2,9 @@
     "mongodb" : {
         "url" : "mongodb://localhost:27017/badjs"
     },
-    "zmq" : {
-        "url" : "tcp://127.0.0.1:10000",
-        "subscribe" : "badjs"
+    "dispatcher": {
+      "port" : 10000,
+      "address" : "127.0.0.1",
+      "subscribe": "badjs"
     }
-    
 }

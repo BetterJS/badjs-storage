@@ -10,7 +10,7 @@ if(argv.indexOf('--project') >= 0){
 }
 
 GLOBAL.MONGDO_URL = GLOBAL.pjconfig.mongodb.url;
-var dispatcher = require('./acceptor/zmq')
+var dispatcher = require('./acceptor/nodeNet')
   , save = require('./storage/MongodbStorage');
 
 
@@ -20,8 +20,9 @@ dispatcher()
 
 
 console.log('badjs-storage start ...');
+/*
 
 setTimeout(function (){
     require('./service/query')();
     require('./service/autoClear')();
-},1000);
+},1000);*/
