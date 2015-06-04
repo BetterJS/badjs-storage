@@ -16,13 +16,19 @@ module.exports = function () {
     fn(null, data);
   });
 
-    var client = new net.Socket();
+    var client = new net.Socket({});
     client.connect(port , address, function() { //'connect' listener
+        console.log("connected server")
     });
 
 
-  client.on('data', function (data) {
-    stream.write(data);
-  });
+    client.on('data', function (data) {
+        stream.write(data);
+    });
+
+    client.on("error" , function (){
+        console.log("failed connect to acceptor");
+        client.end();
+   })
   return stream;
 };
