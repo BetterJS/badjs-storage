@@ -17,6 +17,11 @@ module.exports = function () {
   });
 
     var client = new net.Socket({});
+
+    client.setKeepAlive(true , 3000);
+
+    client.setEncoding("UTF-8")
+
     client.connect(port , address, function() { //'connect' listener
         console.log("connected server")
     });
@@ -26,9 +31,17 @@ module.exports = function () {
         stream.write(data);
     });
 
+    client.on("end" , function (){
+        console.log("client end.");
+    });
+
     client.on("error" , function (){
         console.log("failed connect to acceptor");
         client.end();
+
+        setTimeout(function (){
+            client.connect(port , address);
+        },3000)
    })
   return stream;
 };

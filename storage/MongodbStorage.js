@@ -28,7 +28,7 @@ var insertDocuments = function(db , model) {
     });
 }
 
-var url = global.MONGDO_URL;
+/*var url = global.MONGDO_URL;
 var mongoDB;
 // Use connect method to connect to the Server
 MongoClient.connect(url, function(err, db) {
@@ -38,7 +38,7 @@ MongoClient.connect(url, function(err, db) {
         console.log("Connected correctly to server");
     }
     mongoDB = db;
-});
+});*/
 
 
 module.exports = function (){
@@ -50,13 +50,13 @@ module.exports = function (){
            console.log('parse error');
            return ;
        }
-
+/*
        if(!data.id ){
             console.log('not id data');
             return ;
        }
 
-       if(!mongoDB ){
+       if(!mongoDB ){dataStr.substring(dataStr.indexOf(' '))
            console.log('cannot connect mongodb');
            return ;
        }
@@ -71,9 +71,9 @@ module.exports = function (){
        data.date = new Date(data.date);
 
 
-           insertDocuments(mongoDB , {id : id,
-               model : data
-           });
+       insertDocuments(mongoDB , {id : id,
+           model : data
+       });*/
 
     });
 }
