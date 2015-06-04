@@ -6,7 +6,7 @@ var MongoClient = require('mongodb').MongoClient,
     map = require('map-stream');
 
 
-/*var hadCreatedCollection = {};
+var hadCreatedCollection = {};
 
 var insertDocuments = function(db , model) {
     var collectionName = 'badjslog_' + model.id;
@@ -38,12 +38,12 @@ MongoClient.connect(url, function(err, db) {
         console.log("Connected correctly to server");
     }
     mongoDB = db;
-});*/
+});
 
 
 module.exports = function (){
    return map(function (data) {
-      /* try{
+       try{
         var dataStr = data.toString();
         data = JSON.parse(dataStr.substring(dataStr.indexOf(' ')));
        }catch (e){
@@ -73,7 +73,7 @@ module.exports = function (){
 
            insertDocuments(mongoDB , {id : id,
                model : data
-           });*/
+           });
 
     });
 }
