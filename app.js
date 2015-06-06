@@ -10,7 +10,7 @@ if(argv.indexOf('--project') >= 0){
 }
 
 GLOBAL.MONGDO_URL = GLOBAL.pjconfig.mongodb.url;
-var dispatcher = require('./acceptor/nodeNet')
+var dispatcher = require(GLOBAL.pjconfig.acceptor.module)
   , save = require('./storage/MongodbStorage');
 
 

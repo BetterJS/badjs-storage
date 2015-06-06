@@ -2,9 +2,10 @@
     "mongodb" : {
         "url" : "mongodb://localhost:27017/badjs"
     },
-    "dispatcher": {
+    "acceptor": {
       "port" : 10000,
       "address" : "127.0.0.1",
-      "subscribe": "badjs"
+      "subscribe": "badjs",
+      "module": "./acceptor/nodeNet"
     }
 }

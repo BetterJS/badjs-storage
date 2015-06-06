@@ -2,8 +2,10 @@
     "mongodb" : {
         "url" : "mongodb://betterjs:betterjs4imweb@localhost:27017/badjs"
     },
-    "zmq" : {
-        "url" : "tcp://10.143.132.205:10000",
-        "subscribe" : "badjs"
+    "acceptor": {
+        "port" : 10000,
+        "address" : "10.143.132.205",
+        "subscribe": "badjs",
+        "module": "./acceptor/nodeNet"
     }
 }

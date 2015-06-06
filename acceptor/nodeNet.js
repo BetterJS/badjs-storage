@@ -1,8 +1,8 @@
 var net  = require("net"),
-    port =  GLOBAL.pjconfig.dispatcher.port,
-    address =  GLOBAL.pjconfig.dispatcher.address,
+    port =  GLOBAL.pjconfig.acceptor.port,
+    address =  GLOBAL.pjconfig.acceptor.address,
     map = require('map-stream'),
-    service =  GLOBAL.pjconfig.dispatcher.subscribe;
+    service =  GLOBAL.pjconfig.acceptor.subscribe;
 
 
 
@@ -18,9 +18,6 @@ module.exports = function () {
 
     var client = new net.Socket({});
 
-    client.setKeepAlive(true , 3000);
-
-    client.setEncoding("UTF-8")
 
     client.connect(port , address, function() { //'connect' listener
         console.log("connected server")
@@ -35,13 +32,14 @@ module.exports = function () {
         console.log("client end.");
     });
 
-    client.on("error" , function (){
-        console.log("failed connect to acceptor");
-        client.end();
+    client.on("error" , function (e){
+        if(e.code == 'ECONNREFUSED') {
+            client.setTimeout(4000, function() {
+                client.connect(port, address);
+            });
+            console.log('Timeout for 4 seconds before trying port:' + port + ' again');
+        }
+   });
 
-        setTimeout(function (){
-            client.connect(port , address);
-        },3000)
-   })
   return stream;
 };
