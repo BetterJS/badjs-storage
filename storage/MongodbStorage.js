@@ -52,7 +52,6 @@ module.exports = function (){
        }
 
 
-       console.log(data);
        if(!data.id ){
             console.log('not id data');
             return ;
