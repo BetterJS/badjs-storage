@@ -24,8 +24,31 @@ module.exports = function () {
     });
 
 
+
+    var unProcessBuff = new Buffer(0);
     client.on('data', function (data) {
-        stream.write(data);
+        var buff = Buffer.concat([unProcessBuff , data])
+        var preIndex = 0;
+        for(var i = 0 ; i < buff.length ; i ++){
+            if(buff[i] == 3){
+                stream.write(buff.slice(preIndex , i));
+                unProcessBuff = new Buffer(0);
+                preIndex = i+1;
+            }
+
+            if(i >= (buff.length -1) && buff[i] != 3){
+                console.log(buff.slice(preIndex).toString());
+                unProcessBuff = buff.slice(preIndex  );
+            }
+        }
+       /* data.forEach()
+
+        array.forEach(function (value){
+            if(value.length > 5){
+                stream.write(value);
+            }
+        })*/
+
     });
 
     client.on("end" , function (){

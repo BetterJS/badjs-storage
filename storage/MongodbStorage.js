@@ -40,17 +40,20 @@ MongoClient.connect(url, function(err, db) {
     mongoDB = db;
 });
 
-
+var count = 0;
+setTimeout(function (){
+console.log(count);
+}, 15 * 1000);
 module.exports = function (){
    return map(function (data) {
        try{
         var dataStr = data.toString();
         data = JSON.parse(dataStr.substring(dataStr.indexOf(' ')));
+           count ++ ;
        }catch (e){
            console.log('parse error');
            return ;
        }
-
 
        console.log(data);
        if(!data.id ){
