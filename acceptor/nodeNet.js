@@ -37,7 +37,6 @@ module.exports = function () {
             }
 
             if(i >= (buff.length -1) && buff[i] != 3){
-                console.log(buff.slice(preIndex).toString());
                 unProcessBuff = buff.slice(preIndex  );
             }
         }
@@ -51,17 +50,20 @@ module.exports = function () {
 
     });
 
+    var reconnect = function (){
+        client.setTimeout(4000, function() {
+            client.connect(port, address);
+            console.log('Timeout for 4 seconds before trying port:' + port + ' again');
+        });
+    }
+
     client.on("end" , function (){
         console.log("client end.");
+        reconnect();
     });
 
     client.on("error" , function (e){
-        if(e.code == 'ECONNREFUSED') {
-            client.setTimeout(4000, function() {
-                client.connect(port, address);
-            });
-            console.log('Timeout for 4 seconds before trying port:' + port + ' again');
-        }
+            reconnect();
    });
 
   return stream;
