@@ -45,7 +45,6 @@ module.exports = function (){
        try{
         var dataStr = data.toString();
         data = JSON.parse(dataStr.substring(dataStr.indexOf(' ')));
-           count ++ ;
        }catch (e){
            console.log('parse error');
            return ;
