@@ -20,9 +20,8 @@ dispatcher()
 
 
 console.log('badjs-storage start ...');
-/*
 
 setTimeout(function (){
     require('./service/query')();
     require('./service/autoClear')();
-},1000);*/
+},1000);

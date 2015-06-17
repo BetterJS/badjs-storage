@@ -13,7 +13,7 @@ module.exports = function () {
   var stream = map(function (data, fn) {
     fn(null, data);
   });
-  client.connect("http://" + address + ":" + port);
+  client.connect("tcp://" + address + ":" + port);
   client.subscribe(service);
   client.on('message', function (data) {
     stream.write(data);

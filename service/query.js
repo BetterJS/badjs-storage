@@ -6,6 +6,10 @@ var MongoClient = require('mongodb').MongoClient,
      connect = require('connect');
 
 
+var fs = require("fs");
+var path = require("path");
+
+
 var url = global.MONGDO_URL;
 
 var mongoDB;
@@ -18,6 +22,7 @@ MongoClient.connect(url, function(err, db) {
     }
     mongoDB = db;
 });
+
 
 
 
@@ -38,8 +43,15 @@ var dateFormat  = function (date , fmt){
 }
 
 
-var mongodbReduce = function(doc, out){if(!out.distinctMap[doc.msg] ){out.distinctMap[doc.msg] = 0;};out.distinctMap[doc.msg]++;};
 
+
+var validateDate = function (date){
+        var startDate = new Date(date-0) - 0;
+        if(isNaN(startDate)){
+            return {ok : false , msg : 'date error'};
+        }
+
+}
 
 var validate = function (req , rep){
     var json = req.query;
@@ -95,6 +107,91 @@ var validate = function (req , rep){
     }
 
     return {ok : true};
+}
+
+
+
+var errorMsgTop = function (json , cb){
+    var id;
+    if(isNaN(( id = json.id - 0) ) || id <=0 ||id >= 9999){
+        return {ok : false , msg : 'id is required'};
+    }
+
+    var oneDate = new Date(json.startDate - 0);
+
+    if( isNaN(oneDate - 0) ){
+        return {ok : false , msg : 'startDate or endDate parse error'};
+    }
+
+    var nowDate = new Date(dateFormat(new Date , "yyyy-MM-dd"));
+
+    if(oneDate > nowDate){
+        return {ok : false , msg : 'can not found today'};
+    }
+
+    var startDate =  oneDate;
+    var endDate = new Date(startDate - 0 + 86400000);
+
+    var queryJSON =  {date : {$lt : endDate , $gte : startDate } , level : 4 };
+
+    var limit = json.limit || 50;
+
+    var outResult = {startDate : startDate - 0 , endDate : endDate - 0 , item:[]};
+
+
+    mongoDB.collection('badjslog_' + id).find(queryJSON).count(function(error, doc){
+        if(error){
+            cb(error)
+            return ;
+        }
+
+        var cursor =  mongoDB.collection('badjslog_' + id).aggregate(
+            [
+                {$match: queryJSON},
+                {$group: {_id: "$msg", total: {$sum: 1}}},
+                {$sort: {total: -1}},
+                {$limit: limit}
+            ],
+            {allowDiskUse: true}
+        );
+
+        cursor.toArray(function (err , docs){
+            if(err){
+                cb(err)
+                return ;
+            }
+            outResult.item = docs;
+            outResult.pv = doc;
+            cb(err,outResult);
+        });
+
+    });
+}
+
+
+var getErrorMsgFromCache = function (json , cb){
+    var fileName = dateFormat(new Date(json.startDate), "yyyy-MM-dd") +"__" + json.id;
+    var filePath = path.join("." , "cache" , "errorMsg" , fileName);
+
+    var returnValue = function (err , doc){
+        if(json.noReturn){
+            cb(err );
+        }else {
+            cb(err , doc );
+        }
+    }
+    if(fs.existsSync(filePath)){
+        returnValue(null , fs.readFileSync(filePath));
+
+    }
+    errorMsgTop({startDate : startDate , id : value}, function (err , doc){
+        if(err){
+            console.log("cache errorMsgTop error fileName="+fileName + " " + err)
+        }
+        returnValue(err , doc)
+
+
+    });
 }
 
 
@@ -187,52 +284,63 @@ module.exports = function (){
         })
         .use('/errorMsgTop', connect.query())
         .use('/errorMsgTop', function (req, res) {
+            var error =  validateDate(req.query.startDate)
+            if(error){
+                res.end(JSON.stringify(error));
+                return ;
+            }
+
+            req.query.startDate = req.query.startDate  - 0;
+
+            var fileName = dateFormat(new Date(req.query.startDate), "yyyy-MM-dd") +"__" +req.query.id;
+            var filePath = path.join("." , "cache" , "errorMsg" , fileName);
+
+            if(fs.existsSync(filePath)){
+                res.write(fs.readFileSync(filePath));
+                res.end();
+                return ;
+            }
 
             var json = req.query;
 
-            var id ;
+            errorMsgTop(json ,  function (err , doc){
 
-            if(isNaN(( id = req.query.id - 0) ) || id <=0 ||id >= 9999){
-                return {ok : false , msg : 'id is required'};
-            }
-
-            try{
-                var oneDate = new Date(json.startDate - 0);
-            }catch(e){
-                return {ok : false , msg : 'startDate or endDate parse error'};
-            }
-
-            if( isNaN(oneDate - 0) ){
-                return {ok : false , msg : 'startDate or endDate parse error'};
-            }
-
-            var nowDate = new Date(dateFormat(new Date , "yyyy-MM-dd"));
-
-            if(oneDate > nowDate){
-                return {ok : false , msg : 'can not found today'};
-            }
-
-            var startDate =  new Date(oneDate);
-            var endDate = new Date(startDate - 0 + 86400000);
-
-            var queryJSON =  {date : {$lt : endDate , $gte : startDate } , level : 4 };
-
-            var outResult = {startDate : startDate - 0 , endDate : endDate - 0};
-
-
-            mongoDB.collection('badjslog_' + id).group( [{"msg":true}] , queryJSON ,  {"distinctMap":{} }, mongodbReduce.toString() , "function (out){return out}", function (error,results){
-                if(!results || !results[0]){
-                    outResult.result = {};
-                }else {
-                    outResult.result = results[0].distinctMap;
-                }
                 res.writeHead(200, {
                     'Content-Type': 'text/json'
                 });
-                res.write(JSON.stringify(outResult));
+                res.write(JSON.stringify(doc));
                 res.end();
-
             });
+
+        })
+        .use('/errorMsgTopCache', connect.query())
+        .use('/errorMsgTopCache', function (req, res) {
+            var error =  validateDate(req.query.startDate)
+            if(error){
+                res.end(JSON.stringify(error));
+                return ;
+            }
+
+            var startDate = req.query.startDate  - 0;
+
+            res.end();
+
+            req.query.ids.split("_").forEach(function (value , key){
+                var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") +"__" +value;
+                var filePath = path.join("." , "cache" , "errorMsg" , fileName);
+                if(fs.existsSync(filePath)){
+                    return ;
+                }
+                errorMsgTop({startDate : startDate , id : value}, function (err , doc){
+                    if(err){
+                       console.log("cache errorMsgTop error fileName="+fileName + " " + err)
+                    }else {
+
+                        fs.writeFileSync(filePath , JSON.stringify(doc) );
+                    }
+
+                });
+            })
 
         })
         .listen(9000);
