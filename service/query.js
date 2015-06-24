@@ -189,7 +189,7 @@ var getErrorMsgFromCache = function (query , isJson , cb){
 
 
     }
-    errorMsgTop({startDate : startDate , id : value}, function (err , doc){
+    errorMsgTop({startDate : query.startDate , id : query.value}, function (err , doc){
         if(err){
             console.log("cache errorMsgTop error fileName="+fileName + " " + err)
         }
@@ -313,7 +313,8 @@ module.exports = function (){
                 return ;
             }
 
-            var startDate = req.query.startDate  - 0;
+            req.query.startDate = req.query.startDate  - 0;
+            var startDate = req.query.startDate;
 
             res.end();
 
@@ -321,7 +322,7 @@ module.exports = function (){
                 var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") +"__" +value;
                 var filePath = path.join("." , "cache" , "errorMsg" , fileName);
 
-                req.query.startDate = req.query.startDate  - 0;
+
 
                 if(fs.existsSync(filePath)){
                     return ;
