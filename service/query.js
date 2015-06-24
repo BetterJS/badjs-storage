@@ -117,28 +117,28 @@ var errorMsgTop = function (json , cb){
         cb({ok : false , msg : 'id is required'});
     }
 
-    var oneDate = new Date(json.startDate - 0);
+    var oneDate = new Date(json.startDate ) ;
 
-    if( isNaN(oneDate - 0) ){
+    if( isNaN( +oneDate ) ){
         cb( {ok : false , msg : 'startDate or endDate parse error'});
         return ;
     }
 
-    var nowDate = new Date(dateFormat(new Date , "yyyy-MM-dd"));
+    var nowDate = new Date(dateFormat(new Date , "yyyy-MM-dd")) - 0;
 
-    if(oneDate > nowDate){
+    if(( +oneDate  ) > (+nowDate )){
         cb( {ok : false , msg : 'can not found today'});
         return ;
     }
 
     var startDate =  oneDate;
-    var endDate = new Date(startDate - 0 + 86400000);
+    var endDate = new Date( +startDate  + 86400000);
 
     var queryJSON =  {date : {$lt : endDate , $gte : startDate } , level : 4 };
 
     var limit = json.limit || 50;
 
-    var outResult = {startDate : startDate - 0 , endDate : endDate - 0 , item:[]};
+    var outResult = {startDate : +startDate  , endDate : +endDate  , item:[]};
 
 
     mongoDB.collection('badjslog_' + id).find(queryJSON).count(function(error, doc){
