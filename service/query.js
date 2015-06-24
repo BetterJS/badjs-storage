@@ -183,6 +183,7 @@ var getErrorMsgFromCache = function (query , isJson , cb){
         }
     }
     if(fs.existsSync(filePath)){
+        console.log("get ErrorMsg from cache id="+ query.id );
         if(isJson){
             returnValue(null , JSON.parse(fs.readFileSync(filePath)));
         }else {
