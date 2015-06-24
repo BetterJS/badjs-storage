@@ -17,9 +17,9 @@ var insertDocuments = function(db , model) {
         if (hadCreatedCollection[collectionName]) {
             return ;
         }
-        collection.indexExists('date_-1' , function (err , result ){
+        collection.indexExists('date_-1_level_1' , function (err , result ){
             if(!result){
-                collection.createIndex( {date : -1 } , function (err , result){
+                collection.createIndex( {date : -1 , level : 1 } , function (err , result){
 
                 });
             }

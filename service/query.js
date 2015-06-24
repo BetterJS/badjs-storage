@@ -169,28 +169,31 @@ var errorMsgTop = function (json , cb){
 }
 
 
-var getErrorMsgFromCache = function (json , cb){
-    var fileName = dateFormat(new Date(json.startDate), "yyyy-MM-dd") +"__" + json.id;
+var getErrorMsgFromCache = function (query , isJson , cb){
+    var fileName = dateFormat(new Date(query.startDate), "yyyy-MM-dd") +"__" + query.id;
     var filePath = path.join("." , "cache" , "errorMsg" , fileName);
 
     var returnValue = function (err , doc){
-        if(json.noReturn){
+        if(query.noReturn){
             cb(err );
         }else {
             cb(err , doc );
         }
     }
     if(fs.existsSync(filePath)){
-        returnValue(null , fs.readFileSync(filePath));
+        if(isJson){
+            returnValue(null , JSON.parse(fs.readFileSync(filePath)));
+        }else {
+            returnValue(null , fs.readFileSync(filePath));
+        }
+
 
     }
     errorMsgTop({startDate : startDate , id : value}, function (err , doc){
         if(err){
             console.log("cache errorMsgTop error fileName="+fileName + " " + err)
         }
-        returnValue(err , doc)
-
-
+        returnValue(err , isJson ?doc : JSON.stringify(doc));
     });
 }
 
@@ -290,25 +293,14 @@ module.exports = function (){
                 return ;
             }
 
+
             req.query.startDate = req.query.startDate  - 0;
 
-            var fileName = dateFormat(new Date(req.query.startDate), "yyyy-MM-dd") +"__" +req.query.id;
-            var filePath = path.join("." , "cache" , "errorMsg" , fileName);
-
-            if(fs.existsSync(filePath)){
-                res.write(fs.readFileSync(filePath));
-                res.end();
-                return ;
-            }
-
-            var json = req.query;
-
-            errorMsgTop(json ,  function (err , doc){
-
+            getErrorMsgFromCache(req.query , false , function (error ,doc ){
                 res.writeHead(200, {
                     'Content-Type': 'text/json'
                 });
-                res.write(JSON.stringify(doc));
+                res.write(doc);
                 res.end();
             });
 
@@ -328,18 +320,22 @@ module.exports = function (){
             req.query.ids.split("_").forEach(function (value , key){
                 var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") +"__" +value;
                 var filePath = path.join("." , "cache" , "errorMsg" , fileName);
+
+                req.query.startDate = req.query.startDate  - 0;
+
                 if(fs.existsSync(filePath)){
                     return ;
                 }
-                errorMsgTop({startDate : startDate , id : value}, function (err , doc){
+
+                getErrorMsgFromCache(req.query , false , function (err , doc){
                     if(err){
-                       console.log("cache errorMsgTop error fileName="+fileName + " " + err)
+                        console.log("cache errorMsgTop error fileName="+fileName + " " + err)
                     }else {
-
-                        fs.writeFileSync(filePath , JSON.stringify(doc) );
+                        console.log("id = " +  value  + "cache success");
+                        fs.writeFileSync(filePath , doc );
                     }
-
                 });
+
             })
 
         })
