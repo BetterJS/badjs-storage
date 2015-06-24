@@ -114,19 +114,21 @@ var validate = function (req , rep){
 var errorMsgTop = function (json , cb){
     var id;
     if(isNaN(( id = json.id - 0) ) || id <=0 ||id >= 9999){
-        return {ok : false , msg : 'id is required'};
+        cb({ok : false , msg : 'id is required'});
     }
 
     var oneDate = new Date(json.startDate - 0);
 
     if( isNaN(oneDate - 0) ){
-        return {ok : false , msg : 'startDate or endDate parse error'};
+        cb( {ok : false , msg : 'startDate or endDate parse error'});
+        return ;
     }
 
     var nowDate = new Date(dateFormat(new Date , "yyyy-MM-dd"));
 
     if(oneDate > nowDate){
-        return {ok : false , msg : 'can not found today'};
+        cb( {ok : false , msg : 'can not found today'});
+        return ;
     }
 
     var startDate =  oneDate;
@@ -187,9 +189,11 @@ var getErrorMsgFromCache = function (query , isJson , cb){
             returnValue(null , fs.readFileSync(filePath));
         }
 
+        return;
+
 
     }
-    errorMsgTop({startDate : query.startDate , id : query.value}, function (err , doc){
+    errorMsgTop(query, function (err , doc){
         if(err){
             console.log("cache errorMsgTop error fileName="+fileName + " " + err)
         }
@@ -322,13 +326,14 @@ module.exports = function (){
                 var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") +"__" +value;
                 var filePath = path.join("." , "cache" , "errorMsg" , fileName);
 
-
+                console.log("start cache id=" + value);
 
                 if(fs.existsSync(filePath)){
+                    console.log("id=" + value +" had cached");
                     return ;
                 }
 
-                getErrorMsgFromCache(req.query , false , function (err , doc){
+                getErrorMsgFromCache({id : value , startDate : startDate  } , false , function (err , doc){
                     if(err){
                         console.log("cache errorMsgTop error fileName="+fileName + " " + err)
                     }else {
