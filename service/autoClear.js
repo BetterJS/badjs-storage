@@ -32,9 +32,12 @@ var autoClearStart = function (){
                 if(collection.s.name.indexOf("badjs")<0) {
                     return ;
                 }
+                console.log("start clear " + collection.s.name);
                 collection.deleteMany({ date : { $lt : new Date(new Date - beforeDate)}} , function (err , result){
                     if(err){
                         console.log("clear error " +  err);
+                    }else {
+                        console.log("clear success id=" + collection.s.name);
                     }
                 })
             })
