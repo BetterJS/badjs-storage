@@ -321,7 +321,7 @@ module.exports = function (){
             req.query.startDate = req.query.startDate  - 0;
             var startDate = req.query.startDate;
 
-            req.end();
+            res.end();
 
             req.query.ids.split("_").forEach(function (value , key){
                 var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") +"__" +value;
