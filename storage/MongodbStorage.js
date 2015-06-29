@@ -5,6 +5,11 @@
 var MongoClient = require('mongodb').MongoClient,
     map = require('map-stream');
 
+var log4js = require('log4js'),
+    logger = log4js.getLogger();
+
+var cacheTotal = require('../service/cacheTotal');
+
 
 var hadCreatedCollection = {};
 
@@ -26,6 +31,8 @@ var insertDocuments = function(db , model) {
             hadCreatedCollection[collectionName] = true;
         })
     });
+
+    logger.debug("save one log : " + JSON.stringify(model.model));
 }
 
 var url = global.MONGDO_URL;
@@ -33,9 +40,9 @@ var mongoDB;
 // Use connect method to connect to the Server
 MongoClient.connect(url, function(err, db) {
     if(err){
-        console.log("failed connect to server");
+        logger.info("failed connect to server");
     }else {
-        console.log("Connected correctly to server");
+        logger.info("Connected correctly to server");
     }
     mongoDB = db;
 });
@@ -46,17 +53,17 @@ module.exports = function (){
         var dataStr = data.toString();
         data = JSON.parse(dataStr.substring(dataStr.indexOf(' ')));
        }catch (e){
-           console.log('parse error');
+           logger.error('parse error');
            return ;
        }
 
        if(!data.id ){
-            console.log('not id data');
+           logger.info('not id data');
             return ;
        }
 
        if(!mongoDB ){dataStr.substring(dataStr.indexOf(' '))
-           console.log('cannot connect mongodb');
+           logger.info('cannot connect mongodb');
            return ;
        }
        var id = data.id;
@@ -73,6 +80,11 @@ module.exports = function (){
        insertDocuments(mongoDB , {id : id,
            model : data
        });
+
+       if(data.level == 4){
+           cacheTotal( {id : id });
+           logger.debug("cache total id : " + id);
+       }
 
     });
 }

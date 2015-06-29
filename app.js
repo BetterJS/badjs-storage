@@ -1,4 +1,5 @@
-'use strict';
+var log4js = require('log4js'),
+    logger = log4js.getLogger();
 
 
 
@@ -8,6 +9,14 @@ if(argv.indexOf('--project') >= 0){
 }else {
     GLOBAL.pjconfig = require('./project.json');
 }
+
+if(argv.indexOf('--debug') >= 0){
+    logger.setLevel('DEBUG');
+    global.debug = true;
+}else {
+    logger.setLevel('INFO');
+}
+
 
 GLOBAL.MONGDO_URL = GLOBAL.pjconfig.mongodb.url;
 var dispatcher = require(GLOBAL.pjconfig.acceptor.module)
@@ -19,7 +28,7 @@ dispatcher()
   .pipe(save());
 
 
-console.log('badjs-storage start ...');
+logger.log('badjs-storage start ...');
 
 setTimeout(function (){
     require('./service/query')();

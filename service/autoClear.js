@@ -4,6 +4,9 @@
 
 var MongoClient = require('mongodb').MongoClient;
 
+var log4js = require('log4js'),
+    logger = log4js.getLogger();
+
 
 var url = global.MONGDO_URL;
 
@@ -11,9 +14,9 @@ var mongoDB;
 // Use connect method to connect to the Server
 MongoClient.connect(url, function(err, db) {
     if(err){
-        console.log("failed connect to server");
+        logger.info("failed connect to server");
     }else {
-        console.log("Connected correctly to server");
+        logger.info("Connected correctly to server");
     }
     mongoDB = db;
 });
@@ -26,18 +29,18 @@ MongoClient.connect(url, function(err, db) {
 var beforeDate = 1000 * 60 * 60 *24 *90 ;
 
 var autoClearStart = function (){
-    console.log('start auto clear data before 90d and after 7d will clear again');
+    logger.info('start auto clear data before 90d and after 7d will clear again');
     mongoDB.collections(function (error,collections){
             collections.forEach(function (collection ,key ){
                 if(collection.s.name.indexOf("badjs")<0) {
                     return ;
                 }
-                console.log("start clear " + collection.s.name);
+                logger.info("start clear " + collection.s.name);
                 collection.deleteMany({ date : { $lt : new Date(new Date - beforeDate)}} , function (err , result){
                     if(err){
-                        console.log("clear error " +  err);
+                        logger.info("clear error " +  err);
                     }else {
-                        console.log("clear success id=" + collection.s.name);
+                        logger.info("clear success id=" + collection.s.name);
                     }
                 })
             })

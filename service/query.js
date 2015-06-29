@@ -5,6 +5,9 @@
 var MongoClient = require('mongodb').MongoClient,
      connect = require('connect');
 
+var log4js = require('log4js'),
+    logger = log4js.getLogger();
+
 
 var fs = require("fs");
 var path = require("path");
@@ -16,9 +19,9 @@ var mongoDB;
 // Use connect method to connect to the Server
 MongoClient.connect(url, function(err, db) {
     if(err){
-        console.log("failed connect to server");
+        logger.info("failed connect to server");
     }else {
-        console.log("Connected correctly to server");
+        logger.info("Connected correctly to server");
     }
     mongoDB = db;
 });
@@ -183,7 +186,7 @@ var getErrorMsgFromCache = function (query , isJson , cb){
         }
     }
     if(fs.existsSync(filePath)){
-        console.log("get ErrorMsg from cache id="+ query.id );
+        logger.info("get ErrorMsg from cache id="+ query.id );
         if(isJson){
             returnValue(null , JSON.parse(fs.readFileSync(filePath)));
         }else {
@@ -196,7 +199,7 @@ var getErrorMsgFromCache = function (query , isJson , cb){
     }
     errorMsgTop(query, function (err , doc){
         if(err){
-            console.log("cache errorMsgTop error fileName="+fileName + " " + err)
+            logger.info("cache errorMsgTop error fileName="+fileName + " " + err)
         }
         returnValue(err , isJson ?doc : JSON.stringify(doc));
     });
@@ -266,6 +269,11 @@ module.exports = function (){
                 json.index = 0
             }
 
+            if( global.debug == true){
+                logger.debug("query logs id="+ id + ",query=" + JSON.stringify(queryJSON))
+            }
+
+
             mongoDB.collection('badjslog_' + id).find(queryJSON , function (error,cursor){
                 res.writeHead(200, {
                         'Content-Type': 'text/json'
@@ -276,14 +284,6 @@ module.exports = function (){
                         res.end();
 
                 });
-//
-//                setTimeout(function (){
-//                    if(hadData){
-//                        return ;
-//                    }
-//                    res.write(']');
-//                    res.end();
-//                },3000)
 
 
             });
@@ -327,18 +327,18 @@ module.exports = function (){
                 var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") +"__" +value;
                 var filePath = path.join("." , "cache" , "errorMsg" , fileName);
 
-                console.log("start cache id=" + value);
+                logger.info("start cache id=" + value);
 
                 if(fs.existsSync(filePath)){
-                    console.log("id=" + value +" had cached");
+                    logger.info("id=" + value +" had cached");
                     return ;
                 }
 
                 getErrorMsgFromCache({id : value , startDate : startDate  } , false , function (err , doc){
                     if(err){
-                        console.log("cache errorMsgTop error fileName="+fileName + " " + err)
+                        logger.info("cache errorMsgTop error fileName="+fileName + " " + err)
                     }else {
-                        console.log("id = " +  value  + "cache success");
+                        logger.info("id = " +  value  + "cache success");
                         fs.writeFileSync(filePath , doc );
                     }
                 });
@@ -348,7 +348,7 @@ module.exports = function (){
         })
         .listen(9000);
 
-    console.log('query server start ... ')
+    logger.info('query server start ... ')
 }
 
 
