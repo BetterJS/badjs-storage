@@ -5,12 +5,14 @@ process.chdir("../");
 var cacheTotal = require('../service/cacheTotal');
 
 setInterval(function (){
-    cacheTotal({id:1})
+    cacheTotal.increase({id:1})
 },3000);
 
 
 setInterval(function (){
-    cacheTotal({id:2})
+    cacheTotal.increase({id:2})
 },2000);
+
+//console.log(cacheTotal.getTotal({key:"2015-02-02" , id:15}))
 
 //console.log(process.cwd());

@@ -12,6 +12,8 @@ var log4js = require('log4js'),
 var fs = require("fs");
 var path = require("path");
 
+var cacheTotal = require('../service/cacheTotal');
+
 
 var url = global.MONGDO_URL;
 
@@ -112,7 +114,7 @@ var validate = function (req , rep){
     return {ok : true};
 }
 
-
+var totalKey = dateFormat(new Date , "yyyy-MM-dd");
 
 var errorMsgTop = function (json , cb){
     var id;
@@ -144,11 +146,13 @@ var errorMsgTop = function (json , cb){
     var outResult = {startDate : +startDate  , endDate : +endDate  , item:[]};
 
 
-    mongoDB.collection('badjslog_' + id).find(queryJSON).count(function(error, doc){
+  /*  mongoDB.collection('badjslog_' + id).find(queryJSON).count(function(error, doc){
         if(error){
             cb(error)
             return ;
-        }
+        }*/
+
+    var total = cacheTotal.getTotal({id : id , key : totalKey});
 
         var cursor =  mongoDB.collection('badjslog_' + id).aggregate(
             [
@@ -166,11 +170,11 @@ var errorMsgTop = function (json , cb){
                 return ;
             }
             outResult.item = docs;
-            outResult.pv = doc;
+            outResult.pv = total;
             cb(err,outResult);
         });
 
-    });
+//    });
 }
 
 
@@ -323,6 +327,11 @@ module.exports = function (){
 
             res.end();
 
+            totalKey = dateFormat(new Date(startDate) , "yyyy-MM-dd");
+
+            //trigger cacheTotal load in menory from disk
+            cacheTotal.getTotal({id : 0 , key : totalKey});
+
             req.query.ids.split("_").forEach(function (value , key){
                 var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") +"__" +value;
                 var filePath = path.join("." , "cache" , "errorMsg" , fileName);
@@ -343,7 +352,8 @@ module.exports = function (){
                     }
                 });
 
-            })
+            });
+
 
         })
         .listen(9000);

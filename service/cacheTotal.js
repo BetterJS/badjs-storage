@@ -5,6 +5,8 @@ var log4js = require('log4js'),
     logger = log4js.getLogger();
 
 
+
+
 var dateFormat  = function (date , fmt){
     var o = {
         "M+": date.getMonth() + 1, //月份
@@ -54,12 +56,34 @@ setInterval(function (){
     }
 },300000);
 
-module.exports = function (data){
-        var count = saveData[data.id];
-        if(count >=1){
-            count ++;
-        }else {
-            count = 1;
+module.exports ={
+        increase : function (data){
+            var count = saveData[data.id];
+            if(count >=1){
+                count ++;
+            }else {
+                count = 1;
+            }
+            saveData[data.id] = count;
+        },
+
+        getTotal : function (data){
+            if(!GLOBAL.total[data.key] ||  "{}" == JSON.stringify(GLOBAL.total[data.key])){
+                var filePath = path.join("." , "cache" , "cacheTotal" , data.key);
+                try{
+                    var json = JSON.parse(fs.readFileSync(filePath));
+                    GLOBAL.total[data.key] = json;
+                }catch(e){
+                    logger.error("load cacheTotal fail :" + JSON.stringify(data));
+                    return 0;
+                }
+            }
+
+            var count = GLOBAL.total[data.key][data.id];
+            if( count >0 ){
+               return count;
+            }else {
+                return 0;
+            }
         }
-        saveData[data.id] = count;
-};
+    }
