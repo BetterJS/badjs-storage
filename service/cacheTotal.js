@@ -49,7 +49,7 @@ setInterval(function (){
     // clear old data
     var newKey = dateFormat(new Date , "yyyy-MM-dd");
     if(newKey != key){
-        logger.info("new day  and clear old data , newkey = " + key);
+        logger.debug("new day  and clear old data , newkey = " + key);
         key = newKey;
         GLOBAL.total = {};
         GLOBAL.total[key] = saveData = {};
