@@ -44,7 +44,7 @@ setInterval(function (){
     var filePath = path.join("." , "cache" , "cacheTotal" , key);
     fs.writeFileSync(filePath , JSON.stringify(saveData));
 
-    logger.info("save into disk , key = " + key);
+    logger.debug("save into disk , key = " + key);
 
     // clear old data
     var newKey = dateFormat(new Date , "yyyy-MM-dd");
