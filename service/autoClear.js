@@ -29,7 +29,7 @@ MongoClient.connect(url, function(err, db) {
 var beforeDate = 1000 * 60 * 60 *24 *5 ;
 
 var autoClearStart = function (){
-    logger.info('start auto clear data before 90d and after 7d will clear again');
+    logger.info('start auto clear data before '+ beforeDate +' and after 7d will clear again');
     mongoDB.collections(function (error,collections){
             collections.forEach(function (collection ,key ){
                 if(collection.s.name.indexOf("badjs")<0) {
@@ -58,7 +58,7 @@ module.exports = function (){
        // autoClearStart();
 
 
-        var afterTimestamp = new Date - afterDate;
+        var afterTimestamp = afterDate - new Date ;
 
         logger.info(afterTimestamp + "s should clear");
 
@@ -67,7 +67,7 @@ module.exports = function (){
             setTimeout(function (){
                 autoClearStart();
             } , 86400000 *5);
-        }
+        };
 
         setTimeout(function (){
             start();
