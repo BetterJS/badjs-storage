@@ -25,8 +25,8 @@ MongoClient.connect(url, function(err, db) {
 
 
 
-// 90 天前的数据
-var beforeDate = 1000 * 60 * 60 *24 *90 ;
+// 5 天前的数据
+var beforeDate = 1000 * 60 * 60 *24 *5 ;
 
 var autoClearStart = function (){
     logger.info('start auto clear data before 90d and after 7d will clear again');
@@ -49,18 +49,30 @@ var autoClearStart = function (){
 
 
 module.exports = function (){
-    setTimeout(function (){
 
 
-        autoClearStart();
+        var afterDate = new Date;
+        afterDate.setDate(afterDate.getDate()+1);
+        afterDate.setHours(04);
+
+       // autoClearStart();
 
 
-        // 一周清理一次
-        setInterval(function (){
+        var afterTimestamp = new Date - afterDate;
+
+        logger.info(afterTimestamp + "s should clear");
+
+        var start = function (){
             autoClearStart();
-        }, 1000 * 60 * 60 * 24 *7)
+            setTimeout(function (){
+                autoClearStart();
+            } , 86400000 *5);
+        }
 
-    },5000);
+        setTimeout(function (){
+            start();
+        }, afterTimestamp);
+
 }
 
 
