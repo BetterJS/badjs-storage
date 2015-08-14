@@ -15,7 +15,7 @@ var path = require("path");
 var cacheTotal = require('../service/cacheTotal');
 
 
-var url = global.MONGDO_URL;
+var url = global.MONGODB.url;
 
 var mongoDB;
 // Use connect method to connect to the Server

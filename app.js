@@ -18,7 +18,7 @@ if(argv.indexOf('--debug') >= 0){
 }
 
 
-GLOBAL.MONGDO_URL = GLOBAL.pjconfig.mongodb.url;
+GLOBAL.MONGODB = GLOBAL.pjconfig.mongodb;
 var dispatcher = require(GLOBAL.pjconfig.acceptor.module)
   , save = require('./storage/MongodbStorage');
 
@@ -28,7 +28,7 @@ dispatcher()
   .pipe(save());
 
 
-logger.log('badjs-storage start ...');
+logger.info('badjs-storage start ...');
 
 setTimeout(function (){
     require('./service/query')();
