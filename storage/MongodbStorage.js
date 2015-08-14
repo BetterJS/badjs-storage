@@ -16,11 +16,11 @@ var mongoDB, adminMongoDB;
 var hadCreatedCollection = {};
 
 var tryInit = function (db , collectionName , cb){
-    var collection = db.collection(collectionName);
     if(hadCreatedCollection[collectionName] === 'ping'){
         return ;
     }
     if (hadCreatedCollection[collectionName] === true){
+        var collection = db.collection(collectionName);
         cb(null , collection);
         return true;
     }
