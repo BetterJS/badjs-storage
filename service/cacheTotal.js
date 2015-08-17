@@ -55,7 +55,7 @@ setInterval(function (){
         })
     });
 
-},5000);
+},60000);
 
 
 module.exports = {
