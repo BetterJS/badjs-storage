@@ -140,7 +140,6 @@ module.exports = function (){
 
        if(data.level == 4){
            cacheTotal.increase( {id : id });
-           logger.debug("cache total id : " + id);
        }
 
     });

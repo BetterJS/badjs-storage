@@ -47,16 +47,18 @@ setInterval(function (){
     key = dateFormat(new Date , "yyyy-MM-dd");
     saveData = {};
 
-    Object.keys(newSaveData).forEach( function (value ,key){
-        var saveKey = {key : newKey +"-" + value};
-        mongoDB.collection("total").findOneAndUpdate(saveKey, {$inc:{total : value}} , {upsert : true} , function (err , result){
-            logger.debug("cache total success - " + saveKey + " : " + value );
+    Object.keys(newSaveData).forEach( function (key ){
+        var saveValue = newSaveData[key] -0;
+        var saveKey = {key : newKey +"-" + key};
+        mongoDB.collection("total").findOneAndUpdate(saveKey, {$inc:{total : saveValue }} , {upsert : true} , function (err , result){
+            logger.debug("cache total success - " + saveKey.key + " : " + saveValue );
         })
     });
 
-},1000);
+},5000);
 
-module.exports ={
+
+module.exports = {
         increase : function (data){
             var count = saveData[data.id];
             if(count >=1){
@@ -67,8 +69,18 @@ module.exports ={
             saveData[data.id] = count;
         },
 
-        getTotal : function (data){
-
-
+        getTotal : function (data , cb){
+            var findKey = {key : data.key +"-" + data.id};
+            mongoDB.collection("total").findOne(findKey , function (err , result){
+                if(err){
+                    cb(err);
+                }else {
+                    if(result){
+                        cb(null , result.total)
+                    }else {
+                        cb(null , 0)
+                    }
+                }
+            })
         }
-    }
+}
