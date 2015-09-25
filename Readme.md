@@ -7,7 +7,7 @@
 
 --project 使用测试环境（ project.debug.json ）配置 ， 默认使用 project.json
 
-配置说明
+#配置说明
 ```
 {
     "mongodb" : { // mongodb 地址 
