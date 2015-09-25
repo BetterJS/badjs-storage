@@ -10,41 +10,98 @@ var log4js = require('log4js'),
 
 var cacheTotal = require('../service/cacheTotal');
 
+var mongoDB, adminMongoDB;
+
 
 var hadCreatedCollection = {};
 
-var insertDocuments = function(db , model) {
-    var collectionName = 'badjslog_' + model.id;
-    var collection = db.collection(collectionName);
-    collection.insert([
-        model.model
-    ] , function (err , result){
-        if (hadCreatedCollection[collectionName]) {
-            return ;
-        }
-        collection.indexExists('date_-1_level_1' , function (err , result ){
+var tryInit = function (db , collectionName , cb){
+    if(hadCreatedCollection[collectionName] === 'ping'){
+        return ;
+    }
+    if (hadCreatedCollection[collectionName] === true){
+        var collection = db.collection(collectionName);
+        cb(null , collection);
+        return true;
+    }
+
+    hadCreatedCollection[collectionName] = "ping";
+    db.createCollection(collectionName , function (err , collection){
+        collection.indexExists('date_-1_level_1' , function (errForIE , result ){
+            if(errForIE){
+                throw errForIE;
+            }
             if(!result){
-                collection.createIndex( {date : -1 , level : 1 } , function (err , result){
+                collection.createIndex( {date : -1 , level : 1 } , function (errForCI){
+                    if(errForCI){
+                        throw errForCI;
+                    }
+                    if (global.MONGODB.isShard){
+                        adminMongoDB.command({
+                            shardcollection: "badjs." + collectionName,
+                            key: {_id: "hashed"}
+                        }, function (errForShard, info) {
+                            if (errForShard) {
+                                throw errForShard;
+                            } else {
+                                logger.info(collectionName + " shard correctly");
+                                cb(null , collection);
+                                hadCreatedCollection[collectionName] = true;
+
+                            }
+                        });
+                    }else {
+                        cb(null , collection);
+                        hadCreatedCollection[collectionName] = true;
+                    }
 
                 });
+            }else {
+                cb(null , collection);
+                hadCreatedCollection[collectionName] = true;
             }
-            hadCreatedCollection[collectionName] = true;
         })
-    });
-
-    logger.debug("save one log : " + JSON.stringify(model.model));
+    } )
 }
 
-var url = global.MONGDO_URL;
-var mongoDB;
+
+
+var insertDocuments = function(db , model) {
+    var collectionName = 'badjslog_' + model.id;
+
+    tryInit(db ,collectionName , function (err , collection ){
+        collection.insert([
+            model.model
+        ] , function (err , result){
+            if( global.debug){
+                logger.debug("save one log : " + JSON.stringify(model.model));
+            }
+        });
+    })
+
+
+
+}
+
+
 // Use connect method to connect to the Server
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(global.MONGODB.url, function(err, db) {
     if(err){
         logger.info("failed connect to server");
     }else {
         logger.info("Connected correctly to server");
     }
     mongoDB = db;
+});
+
+
+MongoClient.connect(global.MONGODB.adminUrl, function(err, db) {
+    if(err){
+        logger.info("failed connect to server use admin admin");
+    }else {
+        logger.info("Connected  correctly to server use admin");
+    }
+    adminMongoDB = db;
 });
 
 module.exports = function (){
@@ -83,7 +140,6 @@ module.exports = function (){
 
        if(data.level == 4){
            cacheTotal.increase( {id : id });
-           logger.debug("cache total id : " + id);
        }
 
     });

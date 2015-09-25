@@ -15,7 +15,7 @@ var path = require("path");
 var cacheTotal = require('../service/cacheTotal');
 
 
-var url = global.MONGDO_URL;
+var url = global.MONGODB.url;
 
 var mongoDB;
 // Use connect method to connect to the Server
@@ -125,14 +125,14 @@ var errorMsgTop = function (json , cb){
     var oneDate = new Date(json.startDate ) ;
 
     if( isNaN( +oneDate ) ){
-        cb( {ok : false , msg : 'startDate or endDate parse error'});
+        cb( new Error("parse date error") ,  {ok : false , msg : 'startDate or endDate parse error'});
         return ;
     }
 
     var nowDate = new Date(dateFormat(new Date , "yyyy-MM-dd")) - 0;
 
     if(( +oneDate  ) > (+nowDate )){
-        cb( {ok : false , msg : 'can not found today'});
+        cb(   new Error("can not found today"),  {ok : false , msg : 'can not found today'});
         return ;
     }
 
@@ -152,7 +152,10 @@ var errorMsgTop = function (json , cb){
             return ;
         }*/
 
-    var total = cacheTotal.getTotal({id : id , key : totalKey});
+    cacheTotal.getTotal({id : id , key : totalKey} , function (err , total){
+        if(err){
+            throw err;
+        }
 
         var cursor =  mongoDB.collection('badjslog_' + id).aggregate(
             [
@@ -173,7 +176,7 @@ var errorMsgTop = function (json , cb){
             outResult.pv = total;
             cb(err,outResult);
         });
-
+    });
 //    });
 }
 
@@ -198,12 +201,10 @@ var getErrorMsgFromCache = function (query , isJson , cb){
         }
 
         return;
-
-
     }
     errorMsgTop(query, function (err , doc){
         if(err){
-            logger.info("cache errorMsgTop error fileName="+fileName + " " + err)
+            logger.info("cache errorMsgTop error fileName="+fileName + " " + err.toString())
         }
         returnValue(err , isJson ?doc : JSON.stringify(doc));
     });
@@ -329,8 +330,6 @@ module.exports = function (){
 
             totalKey = dateFormat(new Date(startDate) , "yyyy-MM-dd");
 
-            //trigger cacheTotal load in menory from disk
-            cacheTotal.getTotal({id : 0 , key : totalKey});
 
             req.query.ids.split("_").forEach(function (value , key){
                 var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") +"__" +value;
