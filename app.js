@@ -28,7 +28,7 @@ dispatcher()
   .pipe(save());
 
 
-logger.log('badjs-storage start ...');
+logger.log('start badjs-storage start success.');
 
 setTimeout(function (){
     require('./service/query')();
