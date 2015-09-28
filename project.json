@@ -1,13 +1,13 @@
 {
     "mongodb" : {
-        "url" : "mongodb://betterjs:betterjs4imweb@localhost:27017/badjs",
-        "adminUrl" : "mongodb://betterjs:betterjs4imweb@localhost:27017/admin",
+        "url" : "mongodb://localhost:27017/badjs",
+        "adminUrl" : "mongodb://localhost:27017/admin",
         "isShard" : true
     },
     "acceptor": {
-        "port" : 10000,
-        "address" : "10.143.132.205",
-        "subscribe": "badjs",
-        "module": "./acceptor/zmq"
+      "port" : 10000,
+      "address" : "127.0.0.1",
+      "subscribe": "badjs",
+      "module": "./acceptor/zmq"
     }
 }
