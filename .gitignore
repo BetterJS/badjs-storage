@@ -215,9 +215,17 @@ pip-log.txt
 .mr.developer.cfg
 
 #############
+## webstorm
+#############
+.idea/
+
+#############
 ## NodeJS
 #############
 node_modules/
-coverage.html
-.*
-storage-debug.bat
+
+
+#############
+## my
+############# 
+project.db  
