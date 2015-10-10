@@ -20,12 +20,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/QQEDU/badjs-storage.git"
+    "url": "https://github.com/BetterJS/badjs-storage.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/QQEDU/badjs-storage/issues"
+    "url": "https://github.com/BetterJS/badjs-storage/issues"
   },
-  "homepage": "https://github.com/QQEDU/badjs-storage"
+  "homepage": "https://github.com/BetterJS/badjs-storage"
 }
