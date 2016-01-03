@@ -95,14 +95,17 @@ MongoClient.connect(global.MONGODB.url, function(err, db) {
 });
 
 
-MongoClient.connect(global.MONGODB.adminUrl, function(err, db) {
-    if(err){
-        logger.error("failed connect to mongodb use admin admin");
-    }else {
-        logger.info("Connected  correctly to mongodb use admin");
-    }
-    adminMongoDB = db;
-});
+if(global.MONGODB.isShard){
+    MongoClient.connect(global.MONGODB.adminUrl, function(err, db) {
+        if(err){
+            logger.error("failed connect to mongodb use admin admin");
+        }else {
+            logger.info("Connected  correctly to mongodb use admin");
+        }
+        adminMongoDB = db;
+    });
+}
+
 
 module.exports = function (){
    return map(function (data) {
