@@ -87,9 +87,9 @@ var insertDocuments = function(db , model) {
 // Use connect method to connect to the Server
 MongoClient.connect(global.MONGODB.url, function(err, db) {
     if(err){
-        logger.error("failed connect to server");
+        logger.error("failed connect to mongodb");
     }else {
-        logger.info("Connected correctly to server");
+        logger.info("Connected correctly to mongodb");
     }
     mongoDB = db;
 });
@@ -97,9 +97,9 @@ MongoClient.connect(global.MONGODB.url, function(err, db) {
 
 MongoClient.connect(global.MONGODB.adminUrl, function(err, db) {
     if(err){
-        logger.error("failed connect to server use admin admin");
+        logger.error("failed connect to mongodb use admin admin");
     }else {
-        logger.info("Connected  correctly to server use admin");
+        logger.info("Connected  correctly to mongodb use admin");
     }
     adminMongoDB = db;
 });

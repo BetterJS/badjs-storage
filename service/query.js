@@ -21,9 +21,9 @@ var mongoDB;
 // Use connect method to connect to the Server
 MongoClient.connect(url, function(err, db) {
     if(err){
-        logger.error("failed connect to server");
+        logger.error("failed connect to mongodb");
     }else {
-        logger.info("Connected correctly to server");
+        logger.info("Connected correctly to mongodb");
     }
     mongoDB = db;
 });
