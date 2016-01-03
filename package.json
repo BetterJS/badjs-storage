@@ -2,7 +2,7 @@
   "name": "badjs-storage",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "dependencies": {
     "connect": "^2.25.7",
     "map-stream": "^0.1.0",

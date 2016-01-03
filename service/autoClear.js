@@ -22,11 +22,11 @@ MongoClient.connect(url, function(err, db) {
 });
 
 
-
+var maxAge = GLOBAL.pjconfig.maxAge ;
 
 
 // 5 天前的数据
-var beforeDate = 1000 * 60 * 60 *24 *5 ;
+var beforeDate = 1000 * 60 * 60 *24 *  maxAge ;
 
 var autoClearStart = function (){
     logger.info('start auto clear data before '+ beforeDate +' and after 7d will clear again');
@@ -66,7 +66,7 @@ module.exports = function (){
             autoClearStart();
             setTimeout(function (){
                 autoClearStart();
-            } , 86400000 *5);
+            } , 86400000 * maxAge );
         };
 
         setTimeout(function (){

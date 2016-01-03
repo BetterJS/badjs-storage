@@ -9,5 +9,6 @@
       "address" : "127.0.0.1",
       "subscribe": "badjs",
       "module": "./acceptor/zmq"
-    }
+    },
+   "maxAge" : 7
 }
