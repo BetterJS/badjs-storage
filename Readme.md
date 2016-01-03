@@ -13,7 +13,7 @@
     "mongodb" : { // mongodb 地址 
         "url" : "mongodb://localhost:27017/badjs",  
         "adminUrl" : "mongodb://localhost:27017/admin",  // 如果使用集群，需要超级管理员权限进行配置
-        "isShard" : true      // 是否使用集群
+        "isShard" : false      // 是否使用集群
     },
     "acceptor": {     //配置接入数据的地址， 这里使用 badjs-mq 的地址
       "port" : 10000,
