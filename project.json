@@ -2,7 +2,8 @@
     "mongodb" : {
         "url" : "mongodb://localhost:27017/badjs",
         "adminUrl" : "mongodb://localhost:27017/admin",
-        "isShard" : false
+        "isShard" : false,
+        "limit": 500
     },
     "acceptor": {
       "port" : 10000,

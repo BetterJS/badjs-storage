@@ -14,7 +14,7 @@ var path = require("path");
 var cacheTotal = require('../service/cacheTotal');
 
 var url = global.MONGODB.url;
-var LIMIT = global.MONGODB.limit;
+var LIMIT = global.MONGODB.limit || 500;
 
 var mongoDB;
 // Use connect method to connect to the Server
