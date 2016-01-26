@@ -218,7 +218,7 @@ var errorMsgTop = function(json, cb) {
 
 var getErrorMsgFromCache = function(query, isJson, cb) {
     var fileName = dateFormat(new Date(query.startDate), "yyyy-MM-dd") + "__" + query.id;
-    var filePath = path.join(".", "cache", "errorMsg", fileName);
+    var filePath = path.join(__dirname , "..", "cache", "errorMsg", fileName);
 
     var returnValue = function(err, doc) {
         if (query.noReturn) {
@@ -379,7 +379,7 @@ module.exports = function() {
 
             req.query.ids.split("_").forEach(function(value, key) {
                 var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") + "__" + value;
-                var filePath = path.join(".", "cache", "errorMsg", fileName);
+                var filePath = path.join(__dirname , "..", "cache", "errorMsg", fileName);
 
                 logger.info("start cache id=" + value);
 

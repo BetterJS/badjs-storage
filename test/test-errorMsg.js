@@ -20,7 +20,7 @@ http.createServer(function (request , response ){
 console.log("request;");
 
 
-http.get("http://127.0.0.1:9005/errorMsgTop?id=991&startDate=1433865600000", function (res , req){
+http.get("http://127.0.0.1:9000/errorMsgTop?id=991&startDate=1433865600000", function (res , req){
 
     res.on('data' , function (chunk){
         console.log(chunk.toString());
