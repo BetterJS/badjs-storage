@@ -117,6 +117,11 @@ module.exports = function (){
            return ;
        }
 
+       //  1-debug 2-info 4-error  ,
+       if(data.level!= 4 && data.level != 2){
+            return ;
+       }
+
        if(!data.id ){
            logger.info('not id data');
             return ;
