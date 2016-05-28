@@ -52,7 +52,7 @@ var saveData = {}, currentCacheName = dateFormat(new Date  , "yyyy-MM-dd") ;
 (function (){
     var filePath = path.join(__dirname , "..", "cache", "total", currentCacheName )
     if(fs.existsSync(filePath)){
-        logger.log("cache is exists , load it , path: " + filePath)
+        logger.info("cache is exists , load it , path: " + filePath)
         saveData = JSON.parse(fs.readFileSync(filePath))
     }
 }())
@@ -93,7 +93,7 @@ var flushCacheToDisk = function (resetCache , fileName){
         saveData = {};
     }
 
-    logger.log("flush cache to disk , path : " + filePath );
+    logger.info("flush cache to disk , path : " + filePath );
 
     fs.writeFile(  filePath  , content )
 }
@@ -130,7 +130,7 @@ module.exports = {
             // not today , flush
             if(currentCacheName != newCacheName){
                 flushCacheToDisk(true , currentCacheName);
-                logger.log("reset cache  , currentName " + currentCacheName + " newCacheName " + newCacheName  );
+                logger.info("reset cache  , currentName " + currentCacheName + " newCacheName " + newCacheName  );
                 currentCacheName = newCacheName;
             }
 
