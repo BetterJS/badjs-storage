@@ -51,8 +51,8 @@ var saveData = {}, currentCacheName = dateFormat(new Date  , "yyyy-MM-dd") ;
 
 (function (){
     var filePath = path.join(__dirname , "..", "cache", "total", currentCacheName )
-    if(fs.existSync(filePath)){
-        logger.log("cache is exist , load it , path: " + filePath)
+    if(fs.existsSync(filePath)){
+        logger.log("cache is exists , load it , path: " + filePath)
         saveData = JSON.parse(fs.readFileSync(filePath))
     }
 }())

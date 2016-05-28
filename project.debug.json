@@ -11,5 +11,6 @@
       "subscribe": "badjs",
       "module": "./acceptor/zmq"
     },
-   "maxAge" : 7
+   "maxAge" : 7,
+    "port" : 9000
 }

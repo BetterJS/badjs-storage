@@ -413,7 +413,7 @@ module.exports = function() {
 
 
         })
-        .listen(9000);
+        .listen( GLOBAL.pjconfig.port);
 
-    logger.info('query server start ... ');
+    logger.info('query server start ok , listen '  + GLOBAL.pjconfig.port);
 };
