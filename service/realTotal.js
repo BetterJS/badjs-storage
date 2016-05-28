@@ -105,7 +105,13 @@ setInterval(function() {
 module.exports = {
         increase : function (id , data){
 
-            var md5 = crypto.createHash("md5").update(data.msg).digest('hex')
+            var md5 = "";
+            try{
+                md5 = crypto.createHash("md5").update(data.msg).digest('hex');
+            }catch(e){
+                logger.error("md5 error : " + e)
+                return ;
+            }
 
             if(saveData["total"] == undefined) {
                 saveData["total"] = 0;
