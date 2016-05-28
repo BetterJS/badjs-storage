@@ -50,7 +50,7 @@ var saveData = {}, currentCacheName = dateFormat(new Date  , "yyyy-MM-dd") ;
 
 
 (function (){
-    var filePath = path.join(__dirname , "..", "cache", "errorMsg", currentCacheName)
+    var filePath = path.join(__dirname , "..", "cache", "total", currentCacheName )
     if(fs.existSync(filePath)){
         logger.log("cache is exist , load it , path: " + filePath)
         saveData = JSON.parse(fs.readFileSync(filePath))
@@ -84,7 +84,7 @@ var generateErrorMsgTop = function (totalData , startDate , endDate){
 }
 
 var flushCacheToDisk = function (resetCache , fileName){
-    var filePath = path.join(__dirname , "..", "cache", "errorMsg", fileName)
+    var filePath = path.join(__dirname , "..", "cache", "total", fileName)
     var content = JSON.stringify(saveData);
 
     if(resetCache){
