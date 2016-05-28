@@ -77,7 +77,14 @@ var generateErrorMsgTop = function (totalData , startDate , endDate){
 
             fs.writeFile(
                 filePath ,
-                JSON.stringify({"startDate":startDate,"endDate":endDate,"item" :  errorList.slice(0,50) , "pv" : targetData.total })
+                JSON.stringify({"startDate":startDate,"endDate":endDate,"item" :  errorList.slice(0,50) , "pv" : targetData.total }),
+                function (err){
+                    if (err) {
+                        logger.error('generated total cache error : ' + filePath);
+                    }else {
+                        logger.info('generated total cache succes : ' + filePath);
+                    }
+                }
             )
         }
     })
