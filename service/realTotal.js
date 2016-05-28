@@ -85,7 +85,9 @@ var generateErrorMsgTop = function (totalData , startDate , endDate){
 
 var flushCacheToDisk = function (resetCache , fileName){
     var filePath = path.join(__dirname , "..", "cache", "total", fileName)
+    var tickDate = Date.now();
     var content = JSON.stringify(saveData);
+    logger.info( "stringify spend time : " +  (Date.now() - tickDate))
 
     if(resetCache){
         var yesterday = getYesterday();
@@ -97,9 +99,10 @@ var flushCacheToDisk = function (resetCache , fileName){
 
     fs.writeFile(  filePath  , content )
 }
+
 setInterval(function() {
     flushCacheToDisk(false , currentCacheName);
-},  60 * 60 *  1000 );
+},  20 * 60 *  1000 );
 
 
 module.exports = {
@@ -136,7 +139,7 @@ module.exports = {
             // not today , flush
             if(currentCacheName != newCacheName){
                 flushCacheToDisk(true , currentCacheName);
-                logger.info("reset cache  , currentName " + currentCacheName + " newCacheName " + newCacheName  );
+                logger.info("reset cache  , currentName " + currentCacheName + ", newCacheName " + newCacheName  );
                 currentCacheName = newCacheName;
             }
 
