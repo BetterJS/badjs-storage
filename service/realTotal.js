@@ -63,7 +63,7 @@ var generateErrorMsgTop = function (totalData , startDate , endDate){
 
     Object.keys(totalData).forEach(function (key , index){
         if(key != "total"){
-            var fileName = dateFormat(startDate, "yyyy-MM-dd") + "__" + key;
+            var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") + "__" + key;
             var filePath = path.join(__dirname , "..", "cache", "errorMsg", fileName)
             var targetData =  totalData[key];
             var errorMap = targetData.errorMap;
