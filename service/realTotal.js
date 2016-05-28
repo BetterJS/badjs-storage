@@ -103,23 +103,23 @@ setInterval(function() {
 
 
 module.exports = {
-        increase : function (data){
+        increase : function (id , data){
 
             var md5 = crypto.createHash("md5").update(data.msg).digest('hex')
 
-            if(!saveData["total"]) {
+            if(saveData["total"] == undefined) {
                 saveData["total"] = 0;
             }else {
                 ++saveData["total"];
             }
 
-            if(saveData[data.id]){
-                saveData[data.id].total++;
+            if(saveData[id]){
+                saveData[id].total++;
             }else {
-                saveData[data.id]  = { total :1 , errorMap:{} };
+                saveData[id]  = { total :1 , errorMap:{} };
             }
 
-            var errorMap = saveData[data.id].errorMap;
+            var errorMap = saveData[id].errorMap;
             if( errorMap[md5] ){
                 errorMap[md5].total ++;
             }else {

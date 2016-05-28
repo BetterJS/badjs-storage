@@ -147,7 +147,7 @@ module.exports = function (){
        });
 
        if(data.level == 4){
-           cacheTotal.increase( data);
+           cacheTotal.increase( id , data);
        }
 
     });
