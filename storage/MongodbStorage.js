@@ -8,7 +8,7 @@ var MongoClient = require('mongodb').MongoClient,
 var log4js = require('log4js'),
     logger = log4js.getLogger();
 
-var cacheTotal = require('../service/cacheTotal');
+var cacheTotal = require('../service/realTotal');
 
 var mongoDB, adminMongoDB;
 

@@ -11,7 +11,7 @@ var log4js = require('log4js'),
 var fs = require("fs");
 var path = require("path");
 
-var cacheTotal = require('../service/cacheTotal');
+//var cacheTotal = require('../service/cacheTotal');
 
 var url = global.MONGODB.url;
 var LIMIT = global.MONGODB.limit || 500;
@@ -124,9 +124,9 @@ var validate = function(req, rep) {
     };
 };
 
-var totalKey = dateFormat(new Date, "yyyy-MM-dd");
+//var totalKey = dateFormat(new Date, "yyyy-MM-dd");
 
-var errorMsgTop = function(json, cb) {
+/*var errorMsgTop = function(json, cb) {
     var id;
     if (isNaN((id = json.id - 0)) || id <= 0 || id >= 9999) {
         cb({
@@ -213,7 +213,7 @@ var errorMsgTop = function(json, cb) {
             cb(err, outResult);
         });
     });
-};
+};*/
 
 
 var getErrorMsgFromCache = function(query, isJson, cb) {
@@ -234,15 +234,16 @@ var getErrorMsgFromCache = function(query, isJson, cb) {
         } else {
             returnValue(null, fs.readFileSync(filePath));
         }
-
-        return;
+    }else {
+        logger.info("could not found cache  id=" + query.id);
+        returnValue(null , "" )
     }
-    errorMsgTop(query, function(err, doc) {
+   /* errorMsgTop(query, function(err, doc) {
         if (err) {
             logger.info("cache errorMsgTop error fileName=" + fileName + " " + err.toString());
         }
         returnValue(err, isJson ? doc : JSON.stringify(doc));
-    });
+    });*/
 };
 
 
@@ -363,7 +364,15 @@ module.exports = function() {
         })
         .use('/errorMsgTopCache', connect.query())
         .use('/errorMsgTopCache', function(req, res) {
-            var error = validateDate(req.query.startDate);
+            res.end();
+         /*   var error = validateDate(req.query.startDate);
+            if (error) {
+                res.end(JSON.stringify(error));
+            }else {
+                res.end();
+            }*/
+
+            /*var error = validateDate(req.query.startDate);
             if (error) {
                 res.end(JSON.stringify(error));
                 return;
@@ -400,7 +409,7 @@ module.exports = function() {
                     }
                 });
 
-            });
+            });*/
 
 
         })
