@@ -6,7 +6,7 @@
   "dependencies": {
     "connect": "^2.25.7",
     "map-stream": "^0.1.0",
-    "zmq": "^2.8.0",
+    "axon": "^2.0.0",
     "log4js": "^0.6.2",
     "mongodb": "~2.0.0"
   },

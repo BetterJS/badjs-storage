@@ -9,7 +9,7 @@
       "port" : 10000,
       "address" : "127.0.0.1",
       "subscribe": "badjs",
-      "module": "./acceptor/zmq"
+      "module": "./acceptor/axon"
     },
     "maxAge" : 7,
     "port" : 9000
