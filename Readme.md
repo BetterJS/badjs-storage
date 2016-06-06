@@ -19,8 +19,10 @@
       "port" : 10000,
       "address" : "127.0.0.1",
       "subscribe": "badjs",     // 与badjs-acceptor subscribe 对应
-      "module": "./acceptor/zmq"    //使用什么模块接入
+      "module": "./acceptor/axon"    //指定mq 模块
+      // "module": "./acceptor/zmq" 使用 zmq 作为mq 模块
     },
-    "maxAge" : 5   // 数据保留的天数
+    "maxAge" : 5 ,  // 数据保留的天数
+     "port" : 9000 //  http 服务端口
 }
 ```
