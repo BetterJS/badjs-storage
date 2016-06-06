@@ -8,7 +8,7 @@
     "acceptor": {
       "port" : 10000,
       "address" : "127.0.0.1",
-      "subscribe": "badjs*",
+      "subscribe": "badjs",
       "module": "./acceptor/axon"
     },
     "maxAge" : 7,
