@@ -356,7 +356,7 @@ module.exports = function() {
             getErrorMsgFromCache(req.query, false, function(error, doc) {
                 res.writeHead(200, {
                     'Content-Type': 'application/json; charset=utf-8',
-                    'Content-Length': doc.length || 1
+                    'Content-Length': doc.length
                 });
                 res.write(doc);
                 res.end();
