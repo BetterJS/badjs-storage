@@ -107,9 +107,26 @@ var flushCacheToDisk = function (resetCache , fileName){
     fs.writeFile(  filePath  , content )
 }
 
+
+var tick = 0;
 setInterval(function() {
-    flushCacheToDisk(false , currentCacheName);
-},  20 * 60 *  1000 );
+
+    tick ++;
+
+    var newCacheName = dateFormat(new Date  , "yyyy-MM-dd")
+    // not today , flush
+    if(currentCacheName != newCacheName){
+        flushCacheToDisk(true , currentCacheName);
+        logger.info("reset cache  , currentName " + currentCacheName + ", newCacheName " + newCacheName  );
+        currentCacheName = newCacheName;
+
+        tick = 0;
+    }else if(tick >= 30) { // 每30 分钟才生成一次
+        flushCacheToDisk(false , currentCacheName);
+        tick = 0;
+    }
+
+},  1 * 60 *  1000 );
 
 
 module.exports = {
@@ -142,35 +159,7 @@ module.exports = {
                 errorMap[md5] ={total :1 , msg :data.msg+"" }
             }
 
-            var newCacheName = dateFormat(new Date  , "yyyy-MM-dd")
-            // not today , flush
-            if(currentCacheName != newCacheName){
-                flushCacheToDisk(true , currentCacheName);
-                logger.info("reset cache  , currentName " + currentCacheName + ", newCacheName " + newCacheName  );
-                currentCacheName = newCacheName;
-            }
 
-            //var count = saveData[data.id];
-            //if(count >=1){
-            //    count ++;
-            //}else {
-            //    count = 1;
-            //}
-            //saveData[data.id] = count;
         },
 
-     /*   getTotal : function (data , cb){
-            var findKey = {key : data.key +"-" + data.id};
-            mongoDB.collection("total").findOne(findKey , function (err , result){
-                if(err){
-                    cb(err);
-                }else {
-                    if(result){
-                        cb(null , result.total)
-                    }else {
-                        cb(null , 0)
-                    }
-                }
-            })
-        }*/
 }
