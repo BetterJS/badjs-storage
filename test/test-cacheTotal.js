@@ -13,6 +13,6 @@ setInterval(function (){
     cacheTotal.increase({id:2})
 },2000);
 
-//console.log(cacheTotal.getTotal({key:"2015-02-02" , id:15}))
+//console.log(realTotal.getTotal({key:"2015-02-02" , id:15}))
 
 //console.log(process.cwd());

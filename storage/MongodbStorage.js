@@ -8,7 +8,7 @@ var MongoClient = require('mongodb').MongoClient,
 var log4js = require('log4js'),
     logger = log4js.getLogger();
 
-var cacheTotal = require('../service/realTotal');
+var realTotal = require('../service/realTotalMaster');
 
 var mongoDB, adminMongoDB;
 
@@ -147,7 +147,7 @@ module.exports = function (){
        });
 
        if(data.level == 4){
-           cacheTotal.increase( id , data);
+           realTotal.increase( id , data);
        }
 
     });

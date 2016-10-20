@@ -11,7 +11,7 @@ var log4js = require('log4js'),
 var fs = require("fs");
 var path = require("path");
 
-//var cacheTotal = require('../service/cacheTotal');
+//var realTotal = require('../service/realTotal');
 
 var url = global.MONGODB.url;
 var LIMIT = global.MONGODB.limit || 500;
@@ -174,7 +174,7 @@ var validate = function(req, rep) {
         item: []
     };
 
-    cacheTotal.getTotal({
+    realTotal.getTotal({
         id: id,
         key: totalKey
     }, function(err, total) {

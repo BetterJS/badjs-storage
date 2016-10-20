@@ -12,5 +12,6 @@
       "module": "./acceptor/axon"
     },
     "maxAge" : 7,
+    "realTotal" : 1,
     "port" : 9000
 }
