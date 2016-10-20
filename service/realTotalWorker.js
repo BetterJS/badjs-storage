@@ -118,6 +118,7 @@ setInterval(function() {
         currentCacheName = newCacheName;
 
         tick = 0;
+    }else if(tick >= 30) { // 每30 分钟才生成一次
         flushCacheToDisk(false , currentCacheName);
         tick = 0;
     }
