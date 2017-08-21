@@ -64,11 +64,12 @@ module.exports = function (){
 
         var start = function (){
             autoClearStart();
-            setTimeout(function (){
+            setInterval(function (){
                 autoClearStart();
             } , 86400000 * maxAge );
         };
 
+        //明天凌晨4点，启动
         setTimeout(function (){
             start();
         }, afterTimestamp);
