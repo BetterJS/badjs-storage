@@ -25,7 +25,7 @@ MongoClient.connect(url, function(err, db) {
 var maxAge = GLOBAL.pjconfig.maxAge ;
 
 
-// 5 天前的数据
+// 清理 maxAge 天前的数据
 var beforeDate = 1000 * 60 * 60 *24 *  maxAge ;
 
 var autoClearStart = function (){
