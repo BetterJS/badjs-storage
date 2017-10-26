@@ -145,7 +145,15 @@ function increase(id, data) {
     if (saveData[id]) {
         saveData[id].total++;
     } else {
-        saveData[id] = {total: 1, errorMap: {}};
+        saveData[id] = {total: 1, errorMap: {} , keyCount : 0};
+    }
+
+    if(  saveData[id].keyCount >= 5000 ){
+        return ;
+    }
+
+    if(  saveData[id].keyCount >= 4990 ){
+        logger.error("too large keyCount , should ignore add ,id :" + id )
     }
 
     var errorMap = saveData[id].errorMap;
@@ -153,7 +161,9 @@ function increase(id, data) {
         errorMap[md5].total++;
     } else {
         errorMap[md5] = {total: 1, msg: data.msg + ""}
+        saveData[id].keyCount ++ ;
     }
+
 
 }
 
