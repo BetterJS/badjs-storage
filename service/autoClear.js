@@ -29,7 +29,7 @@ var maxAge = GLOBAL.pjconfig.maxAge ;
 var beforeDate = 1000 * 60 * 60 *24 *  maxAge ;
 
 var autoClearStart = function (){
-    logger.info('start auto clear data before '+ beforeDate +' and after 7d will clear again');
+    logger.info('start auto clear data before '+ beforeDate +' and after '+maxAge+'d will clear again');
     mongoDB.collections(function (error,collections){
             collections.forEach(function (collection ,key ){
                 if(collection.s.name.indexOf("badjs")<0) {
