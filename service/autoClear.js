@@ -29,7 +29,7 @@ var maxAge = GLOBAL.pjconfig.maxAge ;
 var beforeDate = 1000 * 60 * 60 *24 *  maxAge ;
 
 var autoClearStart = function (){
-    logger.info('start auto clear data before  '+maxAge+'d and after '+maxAge+'d will clear again');
+    logger.info('start auto clear data before  '+maxAge+'d and after '+(maxAge > 24 ? 24 : maxAge)+'d will clear again');
     mongoDB.collections(function (error,collections){
             collections.forEach(function (collection ,key ){
                 if(collection.s.name.indexOf("badjs")<0) {
@@ -62,11 +62,12 @@ module.exports = function (){
 
         logger.info(afterTimestamp + "s should clear");
 
+        //greater than 2147483648 , setInterval or setTimeout will overflow
         var start = function (){
             autoClearStart();
             setInterval(function (){
                 autoClearStart();
-            } , 86400000 * maxAge );
+            } , 86400000 *(maxAge > 24 ? 24 : maxAge) );
         };
 
         //明天凌晨4点，启动
